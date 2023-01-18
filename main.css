@@ -1,0 +1,31 @@
+header {
+    background-color: grey;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: white;
+}
+#title {
+    margin-left:20px;
+}
+#navbar {
+    margin-right:150px;
+}
+#navbar a {
+    margin: 0px 20px;
+}
+
+.box {
+  display: flex;
+  align-items: strech;
+  justify-content: space-between
+}
+.centre_h2
+{
+    text-align : center;
+}
+.brd {
+  border: 1px solid black;
+  width: 200px;
+  height: 200px;
+}
