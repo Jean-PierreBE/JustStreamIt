@@ -29,18 +29,21 @@ async function renderCategories() {
 }
 
 //renderCategories();
+var comboList = document.createElement('datalist');  
+comboList.id = "category_list";
+
 fetch(GENRES_API_URL, { method: 'GET' })
   .then(response => {return response.json();})
-  .then((data) => { console.log(data);});
+  .then(data => { 
+          data.forEach(cat => {option.innerHTML = ${cat.name};
+            option.value = ${cat.name};
+            comboList.appendChild(option);});
+                });
 
-  console.log(data_cat);
-  var comboList = document.createElement('datalist');  
-  comboList.id = "category_list";
+  
   
   for (let i = 0; i < data_cat.length; i++) {       
-          option.innerHTML = data_cat[i].name;
-          option.value = data_cat[i].name;
-          comboList.appendChild(option);  
+            
       }
   document.body.appendChild(comboList);
 
