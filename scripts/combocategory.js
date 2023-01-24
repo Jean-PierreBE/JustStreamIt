@@ -1,5 +1,6 @@
 const GENRES_API_URL = 'http://localhost:8000/api/v1/genres/';
 
+
 async function getCategories() {
     let url = GENRES_API_URL;
     try {
@@ -10,40 +11,63 @@ async function getCategories() {
     }
 }
 
+async function fetchMetaData() {
+    let allData = [];
+    let morePagesAvailable = true;
+    let currentPage = 0;
+    const total_pages = 5;
+  
+    while(morePagesAvailable) {
+      currentPage++;
+      console.log(currentPage);
+      if (currentPage == 1) {
+            console.log("currentPage == 1");
+            let res = await fetch(`http://localhost:8000/api/v1/genres/`);
+        }        
+      else 
+        {let res = await fetch(`http://localhost:8000/api/v1/genres/?page=${currentPage}`)};        
+      let data = await response.json();
+      data.forEach(e => allData.unshift(e));
+      morePagesAvailable = currentPage < total_pages;
+    }
+  
+    return allData;
+  }
+
+  async function fetchMetaData1() {
+    let allData = [];
+    let morePagesAvailable = true;
+    let currentPage = 1;
+    const total_pages = 5;
+  
+    while(morePagesAvailable) {
+      currentPage++;
+      console.log(currentPage);
+      let response = await fetch(`http://localhost:8000/api/v1/genres/?page=${currentPage}`);        
+      let data = await response.json();
+      data.forEach(e => allData.unshift(e));
+      morePagesAvailable = currentPage < total_pages;
+    }
+  
+    return allData;
+  }
+
 async function renderCategories() {
-    let data_cat = await getCategories();
+    //let data_cat = await getCategories();
+    let data_cat = fetchMetaData()
     console.log(data_cat);
     var comboList = document.createElement('datalist');
-    for (let i = 0; i < data_cat.length; i++) {
-        console.log(data_cat[i]);
-      }
 
     comboList.id = "category_list";
-    //console.log(data_cat.length);
-    for (let i = 0; i < data_cat.length; i++) {       
-            option.innerHTML = data_cat[i].name;
-            option.value = data_cat[i].name;
+    for (let i = 0; i < data_cat.results.length; i++) { 
+            var option = document.createElement('option');
+            option.innerHTML = data_cat.results[i].name;
+            option.value = data_cat.results[i].name;
             comboList.appendChild(option);  
         }
     document.body.appendChild(comboList);
 }
 
-//renderCategories();
-var comboList = document.createElement('datalist');  
-comboList.id = "category_list";
+renderCategories();
 
-fetch(GENRES_API_URL, { method: 'GET' })
-  .then(response => {return response.json();})
-  .then(data => { 
-          data.forEach(cat => {option.innerHTML = ${cat.name};
-            option.value = ${cat.name};
-            comboList.appendChild(option);});
-                });
-
-  
-  
-  for (let i = 0; i < data_cat.length; i++) {       
-            
-      }
-  document.body.appendChild(comboList);
 
