@@ -11,39 +11,10 @@ async function getCategories(url) {
 }
 
 async function renderCategories() {
-    let url = GENRES_API_URL
-    let data_cat = await getCategories(url);
-    console.log(data_cat);
-    var comboList = document.createElement('datalist');
-
-    comboList.id = "category_list";
-    for (let i = 0; i < data_cat.results.length; i++) { 
-            var option = document.createElement('option');
-            option.innerHTML = data_cat.results[i].name;
-            option.value = data_cat.results[i].name;
-            comboList.appendChild(option);  
-        }
-    document.body.appendChild(comboList);
-
-    url = `http://localhost:8000/api/v1/genres/?page=1`
-    data_cat = await getCategories(url);
-    console.log(data_cat);
-    for (let i = 0; i < data_cat.results.length; i++) { 
-            var option = document.createElement('option');
-            option.innerHTML = data_cat.results[i].name;
-            option.value = data_cat.results[i].name;
-            comboList.appendChild(option);  
-        }
-    document.body.appendChild(comboList);
-}
-
-async function renderCategories1() {
-  //let url = GENRES_API_URL
   const total_pages = 5;
   var comboList = document.createElement('datalist');
   comboList.id = "category_list";
   for (let currentPage = 1; currentPage <= total_pages; currentPage++) { 
-    //url = `http://localhost:8000/api/v1/genres/?page=${currentPage}`;
     url = `${GENRES_API_URL}?page=${currentPage}`;
     let data_cat = await getCategories(url);
     
@@ -56,6 +27,31 @@ async function renderCategories1() {
     document.body.appendChild(comboList);
   }
 }
-  
+
+async function renderCategories1() {
+  let morePagesAvailable = true;
+  let beginPage = 1
+  var comboList = document.createElement('datalist');
+  comboList.id = "category_list";
+  while(morePagesAvailable) { 
+    if (beginPage == 1)
+        {url = `${GENRES_API_URL}?page=${beginPage}`;
+        beginPage++;}
+    let data_cat = await getCategories(url);
+    
+    for (let i = 0; i < data_cat.results.length; i++) { 
+            var option = document.createElement('option');
+            option.innerHTML = data_cat.results[i].name;
+            option.value = data_cat.results[i].name;
+            comboList.appendChild(option);  
+        }
+    document.body.appendChild(comboList);
+    if (data_cat.next == null)
+        {morePagesAvailable = false;}
+    else
+        {url = data_cat.next;}
+  }
+
+}
 
 renderCategories1();
