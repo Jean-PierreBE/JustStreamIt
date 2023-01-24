@@ -10,7 +10,7 @@ async function getCategories(url) {
     }
 }
 
-async function renderCategories1() {
+async function renderCategories() {
   let morePagesAvailable = true;
   let beginPage = 1
   let categories = []
@@ -20,9 +20,7 @@ async function renderCategories1() {
         {url = `${GENRES_API_URL}?page=${beginPage}`;
         beginPage++;}
     let data_cat = await getCategories(url);
-    //console.log(data_cat.results)
     categories.push(...data_cat.results);
-    console.log(categories)
     if (data_cat.next == null)
         {morePagesAvailable = false;}
     else
@@ -41,4 +39,4 @@ async function renderCategories1() {
     
 }
 
-renderCategories1();
+renderCategories();

@@ -1,44 +1,35 @@
-// Constant URL value for API
-const TITLES_API_URL = 'http://localhost:8000/api/v1/titles/';
-const GENRES_API_URL = 'http://localhost:8000/api/v1/genres/';
+const TITLES_API_URL = 'http://localhost:8000/api/v1/titles/?imdb_score=9';
 
-// Defining async function
-async function getapi(url) {    
-    // Storing response
-    const response = await fetch(url);    
-    // Storing data in form of JSON
-    var data = await response.json();
-    console.log(data);
+
+async function getCategories(url) {
+    try {
+        let res = await fetch(url);
+        return await res.json();
+    } catch (error) {
+        console.log(error);
     }
-function comboBox(){
-    // Storing response
-    const response = await fetch(url);    
-    // Storing data in form of JSON
-    var data = await response.json();
-    console.log(data);
-    var comboList = document.createElement('datalist');
-    
-    console.log(data.length)
-    comboList.id = "category_list";
-    for (let i = 0; i < data.length; i++) {
-            option.innerHTML = data[i].name;
-            option.value = data[i].name;
-            comboList.appendChild(option);  
-        }
+}
 
+async function renderCategories() {
+  console.log("renderCategories");
+  let morePagesAvailable = true;
+  let beginPage = 1
+  let categories = []
+  //fetch api
+  while(morePagesAvailable) { 
+    if (beginPage == 1)
+        {url = `${TITLES_API_URL}`;
+        beginPage++;}
+    let data_cat = await getCategories(url);    
+    categories.push(...data_cat.results);
+    console.log(categories)
+    if (data_cat.next == null)
+        {morePagesAvailable = false;}
+    else
+        {url = data_cat.next;}
+  }  
+  console.log(categories[5]);
+  console.log("renderCategories end");
+}
 
-    //comboValues.forEach(comboValues =>{
-       //                 var option = document.createElement('option');
-       //                 option.innerHTML = comboValues;
-        //                option.value = comboValues;
-        //                comboList.appendChild(option);
-    //})
-    document.body.appendChild(comboList);
-   }
-// Calling that async function
-//getapi(GENRES_API_URL);
-
-// fill array with categories
-
-// fill combobox 
-comboBox();
+renderCategories();
