@@ -1,8 +1,7 @@
 const GENRES_API_URL = 'http://localhost:8000/api/v1/genres/';
 
 
-async function getCategories() {
-    let url = GENRES_API_URL;
+async function getCategories(url) {
     try {
         let res = await fetch(url);
         return await res.json();
@@ -11,50 +10,9 @@ async function getCategories() {
     }
 }
 
-async function fetchMetaData() {
-    let allData = [];
-    let morePagesAvailable = true;
-    let currentPage = 0;
-    const total_pages = 5;
-  
-    while(morePagesAvailable) {
-      currentPage++;
-      console.log(currentPage);
-      if (currentPage == 1) {
-            console.log("currentPage == 1");
-            let res = await fetch(`http://localhost:8000/api/v1/genres/`);
-        }        
-      else 
-        {let res = await fetch(`http://localhost:8000/api/v1/genres/?page=${currentPage}`)};        
-      let data = await response.json();
-      data.forEach(e => allData.unshift(e));
-      morePagesAvailable = currentPage < total_pages;
-    }
-  
-    return allData;
-  }
-
-  async function fetchMetaData1() {
-    let allData = [];
-    let morePagesAvailable = true;
-    let currentPage = 1;
-    const total_pages = 5;
-  
-    while(morePagesAvailable) {
-      currentPage++;
-      console.log(currentPage);
-      let response = await fetch(`http://localhost:8000/api/v1/genres/?page=${currentPage}`);        
-      let data = await response.json();
-      data.forEach(e => allData.unshift(e));
-      morePagesAvailable = currentPage < total_pages;
-    }
-  
-    return allData;
-  }
-
 async function renderCategories() {
-    //let data_cat = await getCategories();
-    let data_cat = fetchMetaData()
+    let url = GENRES_API_URL
+    let data_cat = await getCategories(url);
     console.log(data_cat);
     var comboList = document.createElement('datalist');
 
@@ -66,8 +24,38 @@ async function renderCategories() {
             comboList.appendChild(option);  
         }
     document.body.appendChild(comboList);
+
+    url = `http://localhost:8000/api/v1/genres/?page=1`
+    data_cat = await getCategories(url);
+    console.log(data_cat);
+    for (let i = 0; i < data_cat.results.length; i++) { 
+            var option = document.createElement('option');
+            option.innerHTML = data_cat.results[i].name;
+            option.value = data_cat.results[i].name;
+            comboList.appendChild(option);  
+        }
+    document.body.appendChild(comboList);
 }
 
-renderCategories();
+async function renderCategories1() {
+  //let url = GENRES_API_URL
+  const total_pages = 5;
+  var comboList = document.createElement('datalist');
+  comboList.id = "category_list";
+  for (let currentPage = 1; currentPage <= total_pages; currentPage++) { 
+    //url = `http://localhost:8000/api/v1/genres/?page=${currentPage}`;
+    url = `${GENRES_API_URL}?page=${currentPage}`;
+    let data_cat = await getCategories(url);
+    
+    for (let i = 0; i < data_cat.results.length; i++) { 
+            var option = document.createElement('option');
+            option.innerHTML = data_cat.results[i].name;
+            option.value = data_cat.results[i].name;
+            comboList.appendChild(option);  
+        }
+    document.body.appendChild(comboList);
+  }
+}
+  
 
-
+renderCategories1();
