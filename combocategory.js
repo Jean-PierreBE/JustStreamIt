@@ -1,7 +1,12 @@
-//import { getData } from "./moduleJs/modules.js";
-import {dishello} from "./modules.js";
 const GENRES_API_URL = 'http://localhost:8000/api/v1/genres/';
-dishello()
+async function getData(url) {
+  try {
+      let res = await fetch(url);
+      return await res.json();
+  } catch (error) {
+      console.log(error);
+  }
+}
 async function renderCategories() {
   let morePagesAvailable = true;
   let beginPage = 1
@@ -9,7 +14,7 @@ async function renderCategories() {
   //fetch api
   while(morePagesAvailable) { 
     if (beginPage == 1) {
-        url = `${GENRES_API_URL}?page=${beginPage}`;
+        url = GENRES_API_URL;
         beginPage++;
         }
     let data_cat = await getData(url);
@@ -25,10 +30,6 @@ async function renderCategories() {
   for (let i = 0; i < categories.length; i++) { 
           var option = document.createElement('option');
           option.innerHTML = categories[i].name;
-          option.addEventListener("click", function(){
-            alert("option not available for instance");
-        });
-          //option.value = categories[i].name;
           comboList.appendChild(option);  
       }
   document.body.appendChild(comboList);
@@ -36,3 +37,8 @@ async function renderCategories() {
 }
 
 renderCategories();
+
+document.getElementById("category")
+.onchange = function() {
+   alert("option not available for instance") ;
+   }

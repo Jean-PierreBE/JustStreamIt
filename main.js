@@ -1,5 +1,5 @@
 const MOVIES_API_URL = 'http://localhost:8000/api/v1/titles/?imdb_score=9';
-
+const BEST_MOVIES_API_URL = 'http://localhost:8000/api/v1/titles/?&sort_by=-imdb_score';
 
 async function getData(url) {
     try {
@@ -12,13 +12,13 @@ async function getData(url) {
 
 async function setbestMovies(page){
     let bestMovies = document.getElementsByClassName("bestmovies");
-    console.log(bestMovies)
-    let result = await getData(MOVIES_API_URL);
-    console.log(result);
+    //console.log(bestMovies)
+    let result = await getData(BEST_MOVIES_API_URL);
+    //console.log(result);
     let moviesData = result.results;
-    console.log(moviesData);
+    //console.log(moviesData);
     [...bestMovies].forEach(function(image , index) {    
-        console.log(moviesData[index]);
+        //console.log(moviesData[index]);
         image.src = moviesData[index].image_url;
     });
 };

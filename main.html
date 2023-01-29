@@ -18,12 +18,38 @@
             </a>            
         </div>
     </header>
+    <!-- Boîte de dialogue contextuelle simple contenant un formulaire -->
+    <dialog id="favDialog">
+        <form method="dialog">
+        <p><label>Animal préféré :
+            <select>
+            <option></option>
+            <option>Crevette en saumure</option>
+            <option>Panda rouge</option>
+            <option>Singe-araignée</option>
+            </select>
+        </label></p>
+        <menu>
+            <button value="cancel">Annuler</button>
+            <button id="confirmBtn" value="default">Confirmer</button>
+        </menu>
+        </form>
+    </dialog>  
     <main>
-        <div class="box">
-            <div class="brd">
-                one
+        <h2 class="centre_h2">Meilleur film</h2>
+        <div id="bestMovie">
+            <div>
+                <h3 id="titlebestmovie"></h3>
+                <button class="favorite styled" id = "updateDetails" type="button">
+                    Plus d'info
+                </button>
+                <p id="resume">résumé</p>
             </div>
-            
+            <div class="box1">
+                <div class="brd">
+                    <img src="" id="bestmovie">
+                </div>            
+            </div>
         </div>
         <h2 class="centre_h2">Films les mieux notés</h2>
         <div class="box">
@@ -138,9 +164,10 @@
             </small>
         </p>
     </footer>
-    <script  type="module" src="modules.js"></script>
     <script src="main.js"></script>
     <script src="combocategory.js"></script>
+    <script src="bestMovie.js"></script>
+    <script src="details.js"></script>
 </body>
 
 </html>
