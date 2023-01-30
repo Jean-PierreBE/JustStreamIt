@@ -1,4 +1,5 @@
 const BEST_MOVIE_API_URL = 'http://localhost:8000/api/v1/titles/?&sort_by=-imdb_score';
+
 async function getData(url) {
   try {
       let res = await fetch(url);
@@ -8,16 +9,25 @@ async function getData(url) {
   }
 }
 async function renderBestMovie() {
-  let resume = document.getElementsByClassName("resume")
-  let movies = []
   //fetch api
-  let data_cat1 = await getData(BEST_MOVIE_API_URL);
-  console.log(data_cat1);
-  movies.push(...data_cat1.results);
+  let list_bestMovie = await getData(BEST_MOVIE_API_URL);
+  // feth again to have the detail of movie
+  let data_bestMovie = await getData(list_bestMovie.results[0].url);
   //Fill libelle + resumé + image
-  console.log(movies[0].title)
-  document.getElementById("titlebestmovie").innerText = movies[0].title;
-  document.getElementById("bestmovie").src = movies[0].image_url;
+  document.getElementById("titlebestmovie").innerText = data_bestMovie.title;
+  document.getElementById("bestmovie").src = data_bestMovie.image_url;
+  document.getElementById("resume").innerText = data_bestMovie.description;
+  // fill dialog box
+  const sectionDetail = document.querySelector(".bestMovieDetail");
+  // creation and fill balises
+  const titleMovie = document.createElement("h2");
+  titleMovie.innerText = data_bestMovie.title
+  const dateMovie = document.createElement("p");
+  dateMovie.innerText = "Date de sortie : " + data_bestMovie.date_published
+  //append elements
+  sectionDetail.appendChild(titleMovie);
+  sectionDetail.appendChild(dateMovie);
+
 }
 
 renderBestMovie();
