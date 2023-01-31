@@ -1,5 +1,17 @@
 const ALL_BEST_MOVIE_API_URL = 'http://localhost:8000/api/v1/titles/?&sort_by=-imdb_score';
-const MAX_NUMBER_PAGES = 70
+const MAX_NUMBER_PAGES = 10
+const DETAIL_BEST_MOVIE_API_URL = 'http://localhost:8000/api/v1/titles/';
+
+function formatTab(tabdata){
+    let linetab = "";
+
+    for (let i = 0; i < tabdata.length; i++) { 
+        linetab = linetab + tabdata[i] + " ; ";
+    }
+    return linetab;
+}
+
+// fetch api
 async function getData(url) {
   try {
       let res = await fetch(url);
@@ -8,6 +20,66 @@ async function getData(url) {
       console.log(error);
   }
 }
+
+function setmodalbestMovies(detailsection,data){
+    
+    const sectionDetail1 = document.querySelector(detailsection);
+    // clean the window
+    if ( sectionDetail1.childElementCount !== 0 ){
+        sectionDetail1.innerText = ''; 
+    }   
+    // creation balises
+    const titleMovie = document.createElement("h2");
+    const genreMovie = document.createElement("p");  
+    const dateMovie = document.createElement("p");
+    const ratedMovie = document.createElement("p"); 
+    const scoreMovie = document.createElement("p");
+    const realisateur = document.createElement("p"); 
+    const actors = document.createElement("p");
+    const duree = document.createElement("p");
+    const country = document.createElement("p"); 
+    const resultat = document.createElement("p");
+    const resume = document.createElement("p");   
+    // fill balises    
+    titleMovie.innerText = data.title;
+    genreMovie.innerText = "genre : " + formatTab(data.genres); 
+    dateMovie.innerText = "Date de sortie : " + data.date_published;
+    ratedMovie.innerText = "Rate : " + data.avg_vote; 
+    scoreMovie.innerText = "Score imdb : " + data.imdb_score;
+    realisateur.innerText = "réalisateurs : " + formatTab(data.directors);
+    actors.innerText = "acteurs : " + formatTab(data.actors);
+    duree.innerText = "Durée : " + data.duration + " minutes";
+    country.innerText = "pays : " + formatTab(data.countries); 
+    resultat.innerText = "note des critiques : " + data.reviews_from_critics;
+    resume.innerText = data.long_description;
+
+    //append elements
+    sectionDetail1.appendChild(titleMovie);
+    sectionDetail1.appendChild(genreMovie);
+    sectionDetail1.appendChild(dateMovie);
+    sectionDetail1.appendChild(ratedMovie);
+    sectionDetail1.appendChild(scoreMovie);
+    sectionDetail1.appendChild(realisateur);
+    sectionDetail1.appendChild(actors);
+    sectionDetail1.appendChild(duree);
+    sectionDetail1.appendChild(country);
+    sectionDetail1.appendChild(resultat);
+    sectionDetail1.appendChild(resume);  
+}
+
+// fill image and modal windows
+async function setbestMovies(page,tabmovies){
+    let bestMovies = document.getElementsByClassName("bestmovies");
+    [...bestMovies].forEach(async function(image , index) {    
+        //console.log("index : " + index)
+        //console.log("tabmovies[index] : " + tabmovies[index])
+        let detail = await getData(`http://localhost:8000/api/v1/titles/${tabmovies[index]}`);
+        //console.log(detail.image_url);
+        image.src = detail.image_url;
+        setmodalbestMovies(".bestMoviesDetail"+index,detail)
+    });
+};
+
 async function renderMovies() {
   let morePagesAvailable = true;
   let beginPage1 = 1
@@ -40,30 +112,37 @@ async function renderMovies() {
     else
         {url = data_cat2.next;}
   } 
+  //console.log(allMovies[0]);
+  let page = 0;
+
+  setbestMovies(page,allMovies[page]);
+  // flèche droite
+  let forwardButton = document.getElementById("forward-best-movies");
+  forwardButton.addEventListener("click", function(){
+    if (page == MAX_NUMBER_PAGES) {
+        page = 0
+      }
+      else {
+        page++;    
+      };    
+    setbestMovies(page,allMovies[page]);
+    })
+  // flèche gauche
+  let backwardButton = document.getElementById("backward-best-movies");
+  backwardButton.addEventListener("click", function(){
+      if (page == 0) {
+        page = MAX_NUMBER_PAGES
+      }
+      else {
+        page--;    
+      };      
+      setbestMovies(page,allMovies[page]);
+      })
 } 
 
-function setbestMovies(page){
-    let bestMovies = document.getElementsByClassName("bestmovies");
-    //console.log(bestMovies)
-    let result = await getData(BEST_MOVIES_API_URL);
-    //console.log(result);
-    let moviesData = result.results;
-    //console.log(moviesData);
-    [...bestMovies].forEach(function(image , index) {    
-        //console.log(moviesData[index]);
-        image.src = moviesData[index].image_url;
-    });
-};
-
-setbestMovies(0);
-
-let page = 0;
-
-let forwardButton = document.getElementById("forward-best-movies");
-forwardButton.addEventListener("click", function(){
-    alert("coucou");
-    page++;
-    setbestMovies(page);
-})
-  
 renderMovies();
+
+
+
+
+ 

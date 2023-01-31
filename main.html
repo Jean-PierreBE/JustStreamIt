@@ -18,7 +18,7 @@
             </a>            
         </div>
     </header>
-    <!-- Boîte de dialogue reprenant les données sur le film-->
+    <!-- Boîte de dialogue reprenant les données pour le meilleur film-->
     <dialog id="favDialog">
         <form method="dialog">
         <section class = "bestMovieDetail">
@@ -37,7 +37,7 @@
                 <button class="favorite styled" id = "detailBestMovie" type="button">
                     Plus d'info
                 </button>
-                <p id="resume">résumé</p>
+                <p id="resume"></p>
             </div>
             <div class="box1">
                 <div class="brd">
@@ -47,27 +47,69 @@
         </div>
         <h2 class="centre_h2">Films les mieux notés</h2>
         <div class="box">
-            <span class="material-symbols-outlined">arrow_back_ios</span>
+            <span class="material-symbols-outlined" id ="backward-best-movies">arrow_back_ios</span>
             <div class="brd">
-                <img src="" class="bestmovies">
+                <img src="" class="bestmovies" id = "detailBestMovies0">
+                <dialog id="favDialog0">
+                    <form method="dialog">
+                        <section class = "bestMoviesDetail0"> </section>
+                        <menu><button value="cancel">Quitter</button></menu>
+                    </form>
+                </dialog> 
             </div>
             <div class="brd">
-                <img src="" class="bestmovies">
+                <img src="" class="bestmovies" id = "detailBestMovies1">
+                <dialog id="favDialog1">
+                    <form method="dialog">
+                        <section class = "bestMoviesDetail1"> </section>
+                        <menu><button value="cancel">Quitter</button></menu>
+                    </form>
+                </dialog>
             </div>
             <div class="brd">
-                <img src="" class="bestmovies">
+                <img src="" class="bestmovies" id = "detailBestMovies2">
+                <dialog id="favDialog2">
+                    <form method="dialog">
+                        <section class = "bestMoviesDetail2"> </section>
+                        <menu><button value="cancel">Quitter</button></menu>
+                    </form>
+                </dialog>
             </div>
             <div class="brd">
-                <img src="" class="bestmovies">
+                <img src="" class="bestmovies" id = "detailBestMovies3">
+                <dialog id="favDialog3">
+                    <form method="dialog">
+                        <section class = "bestMoviesDetail3"> </section>
+                        <menu><button value="cancel">Quitter</button></menu>
+                    </form>
+                </dialog>
             </div>
             <div class="brd">
-                <img src="" class="bestmovies">
+                <img src="" class="bestmovies" id = "detailBestMovies4">
+                <dialog id="favDialog4">
+                    <form method="dialog">
+                        <section class = "bestMoviesDetail4"> </section>
+                        <menu><button value="cancel">Quitter</button></menu>
+                    </form>
+                </dialog>
             </div>
             <div class="brd">
-                <img src="" class="bestmovies">
+                <img src="" class="bestmovies" id = "detailBestMovies5">
+                <dialog id="favDialog5">
+                    <form method="dialog">
+                        <section class = "bestMoviesDetail5"> </section>
+                        <menu><button value="cancel">Quitter</button></menu>
+                    </form>
+                </dialog>
             </div>
             <div class="brd">
-                <img src="" class="bestmovies">
+                <img src="" class="bestmovies" id = "detailBestMovies6">
+                <dialog id="favDialog6">
+                    <form method="dialog">
+                        <section class = "bestMoviesDetail6"> </section>
+                        <menu><button value="cancel">Quitter</button></menu>
+                    </form>
+                </dialog>
             </div>
             <span class="material-symbols-outlined" id ="forward-best-movies">arrow_forward_ios</span>
         </div>
@@ -158,10 +200,9 @@
             </small>
         </p>
     </footer>
-    <script src="main.js"></script>
     <script src="combocategory.js"></script>
     <script src="bestMovie.js"></script>
-    <script src="details.js"></script>
+    <script src="gestionmodal.js"></script>
     <script src="allBestMovies.js"></script>
 </body>
 

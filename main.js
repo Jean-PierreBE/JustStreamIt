@@ -33,13 +33,3 @@ forwardButton.addEventListener("click", function(){
     page++;
     setbestMovies(page);
 })
-
-
-document.getElementById("category")
-.onchange = function() {
-   var url = this.selectedOptions[0].dataset.href;
-   if (url && confirm("did you choose " + url + "?")) {
-     location.href = url;
-     location.target="_blank";
-   }
-}
