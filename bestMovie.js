@@ -10,6 +10,7 @@ function setmodalbestMovie(detailsection,data){
   }   
   // creation balises
   const titleMovie = document.createElement("h2");
+  const imageMovie = document.createElement("img"); 
   const genreMovie = document.createElement("p");  
   const dateMovie = document.createElement("p");
   const ratedMovie = document.createElement("p"); 
@@ -22,6 +23,7 @@ function setmodalbestMovie(detailsection,data){
   const resume = document.createElement("p");   
   // fill balises    
   titleMovie.innerText = data.title;
+  imageMovie.src = data.image_url;
   genreMovie.innerText = "genre : " + formatTab(data.genres); 
   dateMovie.innerText = "Date de sortie : " + data.date_published;
   ratedMovie.innerText = "Rate : " + data.avg_vote; 
@@ -35,6 +37,7 @@ function setmodalbestMovie(detailsection,data){
 
   //append elements
   sectionDetail.appendChild(titleMovie);
+  sectionDetail.appendChild(imageMovie);
   sectionDetail.appendChild(genreMovie);
   sectionDetail.appendChild(dateMovie);
   sectionDetail.appendChild(ratedMovie);

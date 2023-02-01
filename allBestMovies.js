@@ -1,6 +1,8 @@
 const ALL_BEST_MOVIE_API_URL = 'http://localhost:8000/api/v1/titles/?&sort_by=-imdb_score';
-const MAX_NUMBER_PAGES = 10
+const MAX_NUMBER_PAGES = 1
 const DETAIL_BEST_MOVIE_API_URL = 'http://localhost:8000/api/v1/titles/';
+let allMovies = []
+let biggestPage = 0
 
 function formatTab(tabdata){
     let linetab = "";
@@ -30,6 +32,7 @@ function setmodalbestMovies(detailsection,data){
     }   
     // creation balises
     const titleMovie = document.createElement("h2");
+    const imageMovie = document.createElement("img"); 
     const genreMovie = document.createElement("p");  
     const dateMovie = document.createElement("p");
     const ratedMovie = document.createElement("p"); 
@@ -42,6 +45,7 @@ function setmodalbestMovies(detailsection,data){
     const resume = document.createElement("p");   
     // fill balises    
     titleMovie.innerText = data.title;
+    imageMovie.src = data.image_url;
     genreMovie.innerText = "genre : " + formatTab(data.genres); 
     dateMovie.innerText = "Date de sortie : " + data.date_published;
     ratedMovie.innerText = "Rate : " + data.avg_vote; 
@@ -55,6 +59,7 @@ function setmodalbestMovies(detailsection,data){
 
     //append elements
     sectionDetail1.appendChild(titleMovie);
+    sectionDetail1.appendChild(imageMovie);
     sectionDetail1.appendChild(genreMovie);
     sectionDetail1.appendChild(dateMovie);
     sectionDetail1.appendChild(ratedMovie);
@@ -80,47 +85,88 @@ async function setbestMovies(page,tabmovies){
     });
 };
 
-async function renderMovies() {
-  let morePagesAvailable = true;
-  let beginPage1 = 1
-  let pageMovie = []
-  let allMovies = []
-  //fetch api
-  while(morePagesAvailable) { 
-    if (beginPage1 == 1) {
-        url = ALL_BEST_MOVIE_API_URL;        
-        }
-    let data_cat2 = await getData(url);
-    for (let i = 0; i < data_cat2.results.length; i++) { 
-        if (pageMovie.length == 7 ) {
-            //allMovies.push(...pageMovie);
-            allMovies.push(pageMovie);
-            pageMovie = []
-            pageMovie.push(data_cat2.results[i].id);
-        }
-        else {
-            if (beginPage1 == 1 && i == 0) {
-                beginPage1++;
+async function fetchbestMovies (maxpage){
+    let morePagesAvailable = true;
+    let beginPage1 = 1
+    let pageMovie = []
+    while(morePagesAvailable) { 
+        if (beginPage1 == 1) {
+            url = ALL_BEST_MOVIE_API_URL;        
+            }
+        let data_cat2 = await getData(url);
+        for (let i = 0; i < data_cat2.results.length; i++) { 
+            if (pageMovie.length == 7 ) {
+                //allMovies.push(...pageMovie);
+                allMovies.push(pageMovie);
+                pageMovie = []
+                pageMovie.push(data_cat2.results[i].id);
             }
             else {
-                pageMovie.push(data_cat2.results[i].id); 
-            }            
-        }
-    }    
-    if (data_cat2.next == null  || allMovies.length == MAX_NUMBER_PAGES)
-        {morePagesAvailable = false;}
-    else
-        {url = data_cat2.next;}
-  } 
+                if (beginPage1 == 1 && i == 0) {
+                    beginPage1++;
+                }
+                else {
+                    pageMovie.push(data_cat2.results[i].id); 
+                }            
+            }
+        }    
+        if (data_cat2.next == null  || allMovies.length == maxpage)
+            {morePagesAvailable = false;}
+        else
+            {url = data_cat2.next;}
+      } 
+}
+
+async function ensureEnoughMoviesFetched (maxpage){
+    let morePagesAvailable = true;
+    let beginPage1 = 1;
+    let pageMovie = [];
+    let totalApiPages = Math.ceil(maxpage * 7 / 5);
+    allMovies = [];
+    while(morePagesAvailable) { 
+        if (beginPage1 == 1) {
+            url = ALL_BEST_MOVIE_API_URL;        
+            }
+        let data_cat2 = await getData(url);
+        for (let i = 0; i < data_cat2.results.length; i++) { 
+            if (pageMovie.length == 7 ) {
+                //allMovies.push(...pageMovie);
+                allMovies.push(pageMovie);
+                pageMovie = []
+                pageMovie.push(data_cat2.results[i].id);
+            }
+            else {
+                if (beginPage1 == 1 && i == 0) {
+                    beginPage1++;
+                }
+                else {
+                    pageMovie.push(data_cat2.results[i].id); 
+                }            
+            }
+        }    
+        if (data_cat2.next == null  || allMovies.length == totalApiPages)
+            {morePagesAvailable = false;}
+        else
+            {url = data_cat2.next;}
+      } 
+}
+
+async function renderMovies() {  
+    await  fetchbestMovies(MAX_NUMBER_PAGES);
+  //fetch api
+  //await ensureEnoughMoviesFetched(MAX_NUMBER_PAGES);
+
   //console.log(allMovies[0]);
   let page = 0;
 
   setbestMovies(page,allMovies[page]);
   // flèche droite
   let forwardButton = document.getElementById("forward-best-movies");
-  forwardButton.addEventListener("click", function(){
-    if (page == MAX_NUMBER_PAGES) {
-        page = 0
+  forwardButton.addEventListener("click", async function(){
+    if (page == biggestPage) {
+        //page = 0;
+        biggestPage++;
+        await ensureEnoughMoviesFetched(biggestPage);
       }
       else {
         page++;    
@@ -131,7 +177,8 @@ async function renderMovies() {
   let backwardButton = document.getElementById("backward-best-movies");
   backwardButton.addEventListener("click", function(){
       if (page == 0) {
-        page = MAX_NUMBER_PAGES
+        alert("on est revenu au début");
+        return;
       }
       else {
         page--;    
