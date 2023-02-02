@@ -1,5 +1,5 @@
 const ALL_BEST_MOVIE_API_URL = 'http://localhost:8000/api/v1/titles/?&sort_by=-imdb_score';
-const MAX_NUMBER_PAGES = 1
+const MAX_NUMBER_PAGES = 1;
 const DETAIL_BEST_MOVIE_API_URL = 'http://localhost:8000/api/v1/titles/';
 let allMovies = []
 let biggestPage = 0
