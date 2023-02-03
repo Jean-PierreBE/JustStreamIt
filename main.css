@@ -35,7 +35,8 @@ header {
     vertical-align: middle;
 }
 .brd {
-  border: 1px solid black;
+  /*border: 1px solid #f7f3f3;*/
+  border: none;
   width: 200px;
   height: 270px;
 }

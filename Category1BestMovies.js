@@ -1,9 +1,9 @@
 const CAT1_BEST_MOVIE_API_URL = 'http://localhost:8000/api/v1/titles/?&genre=Animation&sort_by=-imdb_score&country=France&imdb_score_min=7';
 //const CAT1_BEST_MOVIE_API_URL = 'http://localhost:8000/api/v1/titles/?&genre=Adult&sort_by=-imdb_score';
-const DETAIL_CAT_MOVIE_API_URL = 'http://localhost:8000/api/v1/titles/';
-let allCatMovies = [];
-let CatMovies = [];
-let URL_NEXT = '';
+const DETAIL_CAT1_MOVIE_API_URL = 'http://localhost:8000/api/v1/titles/';
+let allCat1Movies = [];
+let Cat1Movies = [];
+let CAT1_URL_NEXT = '';
 
 function formatTab(tabdata){
     let linetab = "";
@@ -14,16 +14,15 @@ function formatTab(tabdata){
     return linetab;
 }
 
-function organizeTab(){
+function organizeTab1(){
     let singletab = [];
-
     for (let i = 0; i < 7; i++) { 
-        singletab.push(CatMovies[i]);
+        singletab.push(Cat1Movies[i]);
     }
-    allCatMovies.push(singletab);
+    allCat1Movies.push(singletab);
 
     for (let j = 0; j < singletab.length; j++) { 
-        CatMovies = CatMovies.filter(value => value !== singletab[j]);
+        Cat1Movies = Cat1Movies.filter(value => value !== singletab[j]);
     }
 }
 
@@ -37,7 +36,7 @@ async function getData(url) {
   }
 }
 
-function setmodalCatbestMovies(detailsection,data){
+function setmodalCat1bestMovies(detailsection,data){
     
     const sectionDetail1 = document.querySelector(detailsection);
     // clean the window
@@ -88,16 +87,16 @@ function setmodalCatbestMovies(detailsection,data){
 
 // fill image and modal windows
  
-async function setCatbestMovies(tabmovies){
+async function setCat1bestMovies(tabmovies){
     for (let i = 0; i < tabmovies.length; i++) { 
         let detail = await getData(`http://localhost:8000/api/v1/titles/${tabmovies[i]}`);
         document.getElementById("detailCategory1"+i).src = detail.image_url;
         
-        setmodalCatbestMovies(".bestMoviesCat1Detail"+i,detail);
+        setmodalCat1bestMovies(".bestMoviesCat1Detail"+i,detail);
     };    
 };
 
-async function fetchCatbestMovies (urlin){
+async function fetchCat1bestMovies (urlin){
     let morePagesAvailable = true;
     let beginPage = 1;
     //let url = '';
@@ -106,47 +105,45 @@ async function fetchCatbestMovies (urlin){
             url = urlin;
             beginPage++;       
             };
-        let data_cat_movie = await getData(url);
-        for (let i = 0; i < data_cat_movie.results.length; i++) { 
-            CatMovies.push(data_cat_movie.results[i].id); 
+        let data_cat1_movie = await getData(url);
+        //console.log(data_cat1_movie);
+        for (let i = 0; i < data_cat1_movie.results.length; i++) { 
+            Cat1Movies.push(data_cat1_movie.results[i].id); 
             }  
         
-        if (data_cat_movie.next == null  || CatMovies.length >= 7) {
+        if (data_cat1_movie.next == null  || Cat1Movies.length >= 7) {
              morePagesAvailable = false;
-             URL_NEXT = data_cat_movie.next;
+             CAT1_URL_NEXT = data_cat1_movie.next;
              }
         else
-            {url = data_cat_movie.next;}
-        };
+            {url = data_cat1_movie.next;}
+        };    
     }
  
-async function renderCatMovies(urlin) {
+async function renderCat1Movies(urlin) {
     //fetch api  
-    await  fetchCatbestMovies(urlin);
+    await  fetchCat1bestMovies(urlin);
     // format page
-    organizeTab();
-    
+    organizeTab1();
     let page = 0;
-    setCatbestMovies(allCatMovies[page]);
+    setCat1bestMovies(allCat1Movies[page]);
 
     // flèche droite
     let forwardButton = document.getElementById("forward-best-movies-cat1");
     forwardButton.addEventListener("click", async function(){
-    if (URL_NEXT == null) {
+    if (CAT1_URL_NEXT == null) {
         alert("Plus de films disponibles");
     }
-    else {console.log("CatMovies.length : "+CatMovies.length)
+    else {console.log("Cat1Movies.length : "+Cat1Movies.length)
         page++;
-        if (allCatMovies.length < page + 1){
-            if (CatMovies.length < 7) {
-                //await ensureEnoughCatmoviesFetched();
-                await fetchCatbestMovies(URL_NEXT);
+        if (allCat1Movies.length < page + 1){
+            if (Cat1Movies.length < 7) {
+                //await ensureEnoughCat1MoviesFetched();
+                await fetchCat1bestMovies(CAT1_URL_NEXT);
              }
-             organizeTab();
-             //console.log("page : "+page)
-             //console.log(allCatMovies[page])
+             organizeTab1();
         }            
-        setCatbestMovies(allCatMovies[page]);     }     
+        setCat1bestMovies(allCat1Movies[page]);     }     
       
     })
     // flèche gauche
@@ -159,7 +156,7 @@ async function renderCatMovies(urlin) {
       else {
         page--;    
       };      
-      setCatbestMovies(allCatMovies[page]);
+      setCat1bestMovies(allCat1Movies[page]);
       })
 
       window.addEventListener("load", event => {
@@ -170,7 +167,7 @@ async function renderCatMovies(urlin) {
   
 } 
 
-renderCatMovies(CAT1_BEST_MOVIE_API_URL);
+renderCat1Movies(CAT1_BEST_MOVIE_API_URL);
 
 
 

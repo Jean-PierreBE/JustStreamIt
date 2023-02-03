@@ -1,9 +1,8 @@
-const CAT1_BEST_MOVIE_API_URL = 'http://localhost:8000/api/v1/titles/?&genre=Animation&sort_by=-imdb_score&country=France&imdb_score_min=7';
-//const CAT1_BEST_MOVIE_API_URL = 'http://localhost:8000/api/v1/titles/?&genre=Adult&sort_by=-imdb_score';
-const DETAIL_CAT_MOVIE_API_URL = 'http://localhost:8000/api/v1/titles/';
-let allCatMovies = [];
-let CatMovies = [];
-let URL_NEXT = '';
+const CAT2_BEST_MOVIE_API_URL = 'http://localhost:8000/api/v1/titles/?&genre=Film-noir&sort_by=-imdb_score';
+const DETAIL_CAT2_MOVIE_API_URL = 'http://localhost:8000/api/v1/titles/';
+let allCat2Movies = [];
+let Cat2Movies = [];
+let CAT2_URL_NEXT = '';
 
 function formatTab(tabdata){
     let linetab = "";
@@ -14,35 +13,34 @@ function formatTab(tabdata){
     return linetab;
 }
 
-function organizeTab(){
+function organizeTab2(){
     let singletab = [];
 
     for (let i = 0; i < 7; i++) { 
-        singletab.push(CatMovies[i]);
+        singletab.push(Cat2Movies[i]);
     }
-    allCatMovies.push(singletab);
+    allCat2Movies.push(singletab);
 
     for (let j = 0; j < singletab.length; j++) { 
-        CatMovies = CatMovies.filter(value => value !== singletab[j]);
+        Cat2Movies = Cat2Movies.filter(value => value !== singletab[j]);
     }
 }
 
 // fetch api
 async function getData(url) {
-  try {
-      let res = await fetch(url);
-      return await res.json();
-  } catch (error) {
-      console.log(error);
+    try {
+        let res = await fetch(url);
+        return await res.json();
+    } catch (error) {
+        console.log(error);
+    }
   }
-}
 
-function setmodalCatbestMovies(detailsection,data){
-    
-    const sectionDetail1 = document.querySelector(detailsection);
+function setmodalCat2bestMovies(detailsection,data){
+    const sectionDetail2 = document.querySelector(detailsection);
     // clean the window
-    if ( sectionDetail1.childElementCount !== 0 ){
-        sectionDetail1.innerText = ''; 
+    if ( sectionDetail2.childElementCount !== 0 ){
+        sectionDetail2.innerText = ''; 
     }   
     // creation balises
     const titleMovie = document.createElement("h2");
@@ -72,32 +70,32 @@ function setmodalCatbestMovies(detailsection,data){
     resume.innerText = data.long_description;
 
     //append elements
-    sectionDetail1.appendChild(titleMovie);
-    sectionDetail1.appendChild(imageMovie);
-    sectionDetail1.appendChild(genreMovie);
-    sectionDetail1.appendChild(dateMovie);
-    sectionDetail1.appendChild(ratedMovie);
-    sectionDetail1.appendChild(scoreMovie);
-    sectionDetail1.appendChild(realisateur);
-    sectionDetail1.appendChild(actors);
-    sectionDetail1.appendChild(duree);
-    sectionDetail1.appendChild(country);
-    sectionDetail1.appendChild(resultat);
-    sectionDetail1.appendChild(resume);  
+    sectionDetail2.appendChild(titleMovie);
+    sectionDetail2.appendChild(imageMovie);
+    sectionDetail2.appendChild(genreMovie);
+    sectionDetail2.appendChild(dateMovie);
+    sectionDetail2.appendChild(ratedMovie);
+    sectionDetail2.appendChild(scoreMovie);
+    sectionDetail2.appendChild(realisateur);
+    sectionDetail2.appendChild(actors);
+    sectionDetail2.appendChild(duree);
+    sectionDetail2.appendChild(country);
+    sectionDetail2.appendChild(resultat);
+    sectionDetail2.appendChild(resume);  
 }
 
 // fill image and modal windows
  
-async function setCatbestMovies(tabmovies){
+async function setCat2bestMovies(tabmovies){
     for (let i = 0; i < tabmovies.length; i++) { 
         let detail = await getData(`http://localhost:8000/api/v1/titles/${tabmovies[i]}`);
-        document.getElementById("detailCategory1"+i).src = detail.image_url;
+        document.getElementById("detailCategory2"+i).src = detail.image_url;
         
-        setmodalCatbestMovies(".bestMoviesCat1Detail"+i,detail);
+        setmodalCat2bestMovies(".bestMoviesCat2Detail"+i,detail);
     };    
 };
 
-async function fetchCatbestMovies (urlin){
+async function fetchCat2bestMovies (urlin){
     let morePagesAvailable = true;
     let beginPage = 1;
     //let url = '';
@@ -108,49 +106,49 @@ async function fetchCatbestMovies (urlin){
             };
         let data_cat_movie = await getData(url);
         for (let i = 0; i < data_cat_movie.results.length; i++) { 
-            CatMovies.push(data_cat_movie.results[i].id); 
+            Cat2Movies.push(data_cat_movie.results[i].id); 
             }  
         
-        if (data_cat_movie.next == null  || CatMovies.length >= 7) {
+        if (data_cat_movie.next == null  || Cat2Movies.length >= 7) {
              morePagesAvailable = false;
-             URL_NEXT = data_cat_movie.next;
+             CAT2_URL_NEXT = data_cat_movie.next;
              }
         else
             {url = data_cat_movie.next;}
         };
     }
  
-async function renderCatMovies(urlin) {
+async function rendercat2Movies(urlin) {
     //fetch api  
-    await  fetchCatbestMovies(urlin);
+    await  fetchCat2bestMovies(urlin);
     // format page
-    organizeTab();
+    organizeTab2();
     
     let page = 0;
-    setCatbestMovies(allCatMovies[page]);
+    setCat2bestMovies(allCat2Movies[page]);
 
     // flèche droite
-    let forwardButton = document.getElementById("forward-best-movies-cat1");
+    let forwardButton = document.getElementById("forward-best-movies-cat2");
     forwardButton.addEventListener("click", async function(){
-    if (URL_NEXT == null) {
+    if (CAT2_URL_NEXT == null) {
         alert("Plus de films disponibles");
     }
-    else {console.log("CatMovies.length : "+CatMovies.length)
+    else {console.log("CAT2Movies.length : "+Cat2Movies.length)
         page++;
-        if (allCatMovies.length < page + 1){
-            if (CatMovies.length < 7) {
-                //await ensureEnoughCatmoviesFetched();
-                await fetchCatbestMovies(URL_NEXT);
+        if (allCat2Movies.length < page + 1){
+            if (Cat2Movies.length < 7) {
+                //await ensureEnoughCAT2MoviesFetched();
+                await fetchCat2bestMovies(CAT2_URL_NEXT);
              }
-             organizeTab();
+             organizeTab2();
              //console.log("page : "+page)
-             //console.log(allCatMovies[page])
+             //console.log(allCAT2Movies[page])
         }            
-        setCatbestMovies(allCatMovies[page]);     }     
+        setCat2bestMovies(allCat2Movies[page]);     }     
       
     })
     // flèche gauche
-    let backwardButton = document.getElementById("backward-best-movies-cat1");
+    let backwardButton = document.getElementById("backward-best-movies-cat2");
     backwardButton.addEventListener("click", function(){
       if (page == 0) {
         alert("on est revenu au début");
@@ -159,7 +157,7 @@ async function renderCatMovies(urlin) {
       else {
         page--;    
       };      
-      setCatbestMovies(allCatMovies[page]);
+      setCat2bestMovies(allCat2Movies[page]);
       })
 
       window.addEventListener("load", event => {
@@ -170,7 +168,7 @@ async function renderCatMovies(urlin) {
   
 } 
 
-renderCatMovies(CAT1_BEST_MOVIE_API_URL);
+rendercat2Movies(CAT2_BEST_MOVIE_API_URL);
 
 
 
