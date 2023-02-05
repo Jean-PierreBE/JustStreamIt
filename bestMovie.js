@@ -66,6 +66,7 @@ async function renderBestMovie() {
   //Fill libelle + resumé + image
   document.getElementById("titlebestmovie").innerText = data_bestMovie.title;
   document.getElementById("bestmovie").src = data_bestMovie.image_url;
+  document.getElementById("bestmovie").title = data_bestMovie.title;
   document.getElementById("resume").innerText = data_bestMovie.description;
   // fill dialog box
   setmodalbestMovie(".bestMovieDetail",data_bestMovie)

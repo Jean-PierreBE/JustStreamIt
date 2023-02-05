@@ -1,5 +1,5 @@
-const CAT3_BEST_MOVIE_API_URL = 'http://localhost:8000/api/v1/titles/?&genre=Western&sort_by=-imdb_score';
-//const CAT3_BEST_MOVIE_API_URL = 'http://localhost:8000/api/v1/titles/?&genre=Adult&sort_by=-imdb_score';
+//const CAT3_BEST_MOVIE_API_URL = 'http://localhost:8000/api/v1/titles/?&genre=Western&sort_by=-imdb_score';
+const CAT3_BEST_MOVIE_API_URL = 'http://localhost:8000/api/v1/titles/?&genre=Adult&sort_by=-imdb_score';
 const DETAIL_CAT3_MOVIE_API_URL = 'http://localhost:8000/api/v1/titles/';
 let allCat3Movies = [];
 let Cat3Movies = [];
@@ -16,7 +16,7 @@ function formatTab(tabdata){
 
 function organizeTab3(){
     let singletab = [];
-    for (let i = 0; i < 7; i++) { 
+    for (let i = 0; i < Cat3Movies.length; i++) { 
         singletab.push(Cat3Movies[i]);
     }
     allCat3Movies.push(singletab);
@@ -91,7 +91,7 @@ async function setCat3bestMovies(tabmovies){
     for (let i = 0; i < tabmovies.length; i++) { 
         let detail = await getData(`http://localhost:8000/api/v1/titles/${tabmovies[i]}`);
         document.getElementById("detailCategory3"+i).src = detail.image_url;
-        
+        document.getElementById("detailCategory3"+i).title = detail.title;
         setmodalCat3bestMovies(".bestMoviesCat3Detail"+i,detail);
     };    
 };
@@ -131,24 +131,18 @@ async function renderCat3Movies(urlin) {
     // flèche droite
     let forwardButton3 = document.getElementById("forward-best-movies-cat3");
     forwardButton3.addEventListener("click", async function(){
-        console.log("avant");
-        console.log(CAT3_URL_NEXT)
     if (CAT3_URL_NEXT == null) {
         alert("Plus de films disponibles");
     }
-    else {console.log("Cat3Movies.length : "+Cat3Movies.length)
+    else {
         page++;
-        console.log(page)
-        console.log(allCat3Movies.length)
         if (allCat3Movies.length < page + 1){
             if (Cat3Movies.length < 7) {
                 //await ensureEnoughCat3MoviesFetched();
                 await fetchCat3bestMovies(CAT3_URL_NEXT);
              }
-             console.log(Cat3Movies)
              organizeTab3();
         }      
-        console.log(allCat3Movies[page])  ;    
         setCat3bestMovies(allCat3Movies[page]); 
         }     
       
@@ -156,7 +150,6 @@ async function renderCat3Movies(urlin) {
     // flèche gauche
     let backwardButton3 = document.getElementById("backward-best-movies-cat3");
     backwardButton3.addEventListener("click", function(){
-        console.log("arriere")
       if (page == 0) {
         alert("on est revenu au début");
         return;
@@ -176,8 +169,3 @@ async function renderCat3Movies(urlin) {
 } 
 
 renderCat3Movies(CAT3_BEST_MOVIE_API_URL);
-
-
-
-
- 

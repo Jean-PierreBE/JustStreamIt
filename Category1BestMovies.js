@@ -91,6 +91,7 @@ async function setCat1bestMovies(tabmovies){
     for (let i = 0; i < tabmovies.length; i++) { 
         let detail = await getData(`http://localhost:8000/api/v1/titles/${tabmovies[i]}`);
         document.getElementById("detailCategory1"+i).src = detail.image_url;
+        document.getElementById("detailCategory1"+i).title = detail.title;
         
         setmodalCat1bestMovies(".bestMoviesCat1Detail"+i,detail);
     };    

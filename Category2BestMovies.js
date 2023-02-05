@@ -92,6 +92,7 @@ async function setCat2bestMovies(tabmovies){
         document.getElementById("detailCategory2"+i).src = detail.image_url;
         
         setmodalCat2bestMovies(".bestMoviesCat2Detail"+i,detail);
+        document.getElementById("detailCategory2"+i).title = detail.title;
     };    
 };
 

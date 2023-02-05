@@ -81,6 +81,7 @@ async function setbestMovies(page,tabmovies){
         let detail = await getData(`http://localhost:8000/api/v1/titles/${tabmovies[index]}`);
         //console.log(detail.image_url);
         image.src = detail.image_url;
+        image.title = detail.title;
         setmodalbestMovies(".bestMoviesDetail"+index,detail)
     });
 };
@@ -188,8 +189,3 @@ async function renderMovies() {
 } 
 
 renderMovies();
-
-
-
-
- 
