@@ -7,7 +7,7 @@ async function getData(url) {
       console.log(error);
   }
 }
-async function renderCategories() {
+async function renderGenres() {
   let morePagesAvailable = true;
   let beginPage = 1
   let categories = []
@@ -36,9 +36,9 @@ async function renderCategories() {
     
 }
 
-renderCategories();
+renderGenres();
 
 document.getElementById("category")
 .onchange = function() {
-   alert("option not available for instance") ;
+   alert("option non operationnelle pour le moment") ;
    }

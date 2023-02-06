@@ -1,8 +1,6 @@
 function gestionModal (button, dialogue) {
   let updateButton = document.getElementById(button);
   let favDialog = document.getElementById(dialogue);
-  //console.log("button = " + button);
-  //console.log("dialogue = " + dialogue);
   // Le bouton "Mettre à jour les détails" ouvre le <dialogue> ; modulaire
   updateButton.addEventListener('click', function onOpen() {
     if (typeof favDialog.showModal === "function") {

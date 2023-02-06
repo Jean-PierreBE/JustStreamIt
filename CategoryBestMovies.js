@@ -3,12 +3,13 @@ const CAT_BEST_MOVIE_API_URL = ['http://localhost:8000/api/v1/titles/?&sort_by=-
                                 'http://localhost:8000/api/v1/titles/?&genre=Film-noir&sort_by=-imdb_score',
                                 'http://localhost:8000/api/v1/titles/?&genre=Western&sort_by=-imdb_score'];
 const CAT_BEST_MOVIE_API_URL1 = ['http://localhost:8000/api/v1/titles/?&sort_by=-imdb_score',
-                                'http://localhost:8000/api/v1/titles/?&genre=Animation&sort_by=-imdb_score&country=France&imdb_score_min=8',
+                                'http://localhost:8000/api/v1/titles/?&genre=Animation&sort_by=-imdb_score&country=France&country_contains=USA&imdb_score_min=7',
                                 'http://localhost:8000/api/v1/titles/?&genre=Film-noir&sort_by=-imdb_score',
                                 'http://localhost:8000/api/v1/titles/?&genre=Adult&sort_by=-imdb_score'];                                
 const DETAIL_CAT_MOVIE_API_URL = 'http://localhost:8000/api/v1/titles/';
 const MAX_MOVIES = 7;
 let page = [0,0,0,0];
+let page_max = [0,0,0,0];
 let allCatMovies = [[],[],[],[]];
 let CatMovies = [[],[],[],[]];
 let CAT_URL_NEXT = ["","","",""];
@@ -55,7 +56,7 @@ async function getData(url) {
 }
 
 
-function setmodalCatbestMovies(detailsection,data,ind){
+function setmodalCatbestMovies(detailsection,data){
     let sectionDetail = document.querySelector(detailsection);
     // clean the window
     if ( sectionDetail.childElementCount !== 0 ){
@@ -165,23 +166,28 @@ async function renderCatMovies(urlin, icat) {
     
     setCatbestMovies(allCatMovies[icat][page[icat]],icat);
     first = 'N';
-
     // flèche droite
     let forwardButton = document.getElementById("forward-best-movies-cat"+icat);
     forwardButton.addEventListener("click", async function(){
-    if (CAT_URL_NEXT[icat] == null) {
+    if (CAT_URL_NEXT[icat] == null && page[icat] == page_max[icat]) {
         alert("Plus de films disponibles");
     }
     else {
         page[icat]++;
         if (allCatMovies[icat].length < page[icat] + 1){
             if (CatMovies[icat].length < 7) {
-                //await ensureEnoughCat3MoviesFetched();
                 await fetchCatbestMovies(CAT_URL_NEXT[icat],icat,first);
-             }
-             organizeTab(icat);
-        } 
-        setCatbestMovies(allCatMovies[icat][page[icat]],icat); 
+                if (CAT_URL_NEXT[icat] == null){
+                    page_max[icat] = page[icat];
+                }
+                }
+                organizeTab(icat);
+        }         
+        setCatbestMovies(allCatMovies[icat][page[icat]],icat);
+        //purge old movies
+        if (allCatMovies[icat][page[icat]].length < MAX_MOVIES){
+            console.log("purge");
+        }
         } 
     })
     // flèche gauche
@@ -199,5 +205,5 @@ async function renderCatMovies(urlin, icat) {
 } 
 
 for (let icat = 0; icat < CAT_BEST_MOVIE_API_URL.length; icat++) { 
-    renderCatMovies(CAT_BEST_MOVIE_API_URL[icat],icat); 
+    renderCatMovies(CAT_BEST_MOVIE_API_URL1[icat],icat); 
     }
