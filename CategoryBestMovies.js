@@ -1,12 +1,13 @@
-const CAT_BEST_MOVIE_API_URL = ['http://localhost:8000/api/v1/titles/?&sort_by=-imdb_score',
-                                'http://localhost:8000/api/v1/titles/?&genre=Animation&sort_by=-imdb_score',
-                                'http://localhost:8000/api/v1/titles/?&genre=Film-noir&sort_by=-imdb_score',
-                                'http://localhost:8000/api/v1/titles/?&genre=Western&sort_by=-imdb_score'];
-const CAT_BEST_MOVIE_API_URL1 = ['http://localhost:8000/api/v1/titles/?&sort_by=-imdb_score',
-                                'http://localhost:8000/api/v1/titles/?&genre=Animation&sort_by=-imdb_score&country=France&country_contains=USA&imdb_score_min=7',
-                                'http://localhost:8000/api/v1/titles/?&genre=Film-noir&sort_by=-imdb_score',
-                                'http://localhost:8000/api/v1/titles/?&genre=Adult&sort_by=-imdb_score'];                                
+const CAT_BEST_MOVIE_API_URL = [['Films les mieux notés','http://localhost:8000/api/v1/titles/?&sort_by=-imdb_score'],
+                                ['Animation','http://localhost:8000/api/v1/titles/?&genre=Animation&sort_by=-imdb_score'],
+                                ['Série noire','http://localhost:8000/api/v1/titles/?&genre=Film-noir&sort_by=-imdb_score'],
+                                ['Western','http://localhost:8000/api/v1/titles/?&genre=Western&sort_by=-imdb_score']];
+const CAT_BEST_MOVIE_API_URL1 = [['Films les mieux notés','http://localhost:8000/api/v1/titles/?&sort_by=-imdb_score'],
+                                ['Animation','http://localhost:8000/api/v1/titles/?&genre=Animation&sort_by=-imdb_score&country=France&country_contains=USA&imdb_score_min=7'],
+                                ['Série noire','http://localhost:8000/api/v1/titles/?&genre=Film-noir&sort_by=-imdb_score'],
+                                ['Adulte','http://localhost:8000/api/v1/titles/?&genre=Adult&sort_by=-imdb_score']];                                
 const DETAIL_CAT_MOVIE_API_URL = 'http://localhost:8000/api/v1/titles/';
+const INFO_NOT_AVAILABLE = 'Information non disponible';
 const MAX_MOVIES = 7;
 let page = [0,0,0,0];
 let page_max = [0,0,0,0];
@@ -75,7 +76,8 @@ function setmodalCatbestMovies(detailsection,data){
     let country = document.createElement("p"); 
     let resultat = document.createElement("p");
     let resume = document.createElement("p");   
-    // fill balises    
+    // fill balises
+    let info = "";    
     titleMovie.innerText = data.title;
     imageMovie.src = data.image_url;
     genreMovie.innerText = "genre : " + formatTab(data.genres); 
@@ -85,9 +87,24 @@ function setmodalCatbestMovies(detailsection,data){
     realisateur.innerText = "réalisateurs : " + formatTab(data.directors);
     actors.innerText = "acteurs : " + formatTab(data.actors);
     duree.innerText = "Durée : " + data.duration + " minutes";
-    country.innerText = "pays : " + formatTab(data.countries); 
-    resultat.innerText = "note des critiques : " + data.reviews_from_critics;
-    resume.innerText = data.long_description;
+    //pays
+    country.innerText = "pays : " + formatTab(data.countries);
+    //box office
+    if (data.worldwide_gross_income == null){
+        info = INFO_NOT_AVAILABLE;
+    }
+    else {
+        info = data.worldwide_gross_income;
+    }
+    resultat.innerText = "Résultats box office : " + info;
+    // résumé
+    if (data.long_description == null){
+        info = INFO_NOT_AVAILABLE;
+    }
+    else {
+        info = data.long_description;
+    }
+    resume.innerText = "Résumé : " + info;
 
     //append elements
     sectionDetail.appendChild(titleMovie);
@@ -107,12 +124,27 @@ function setmodalCatbestMovies(detailsection,data){
 // fill image and modal windows
  
 async function setCatbestMovies(tabmovies,ind){
+    // fill title
+    document.getElementById("titlecategory"+ind).innerText = CAT_BEST_MOVIE_API_URL[ind][0];
+    //fill modal windows
     for (let i = 0; i < tabmovies.length; i++) { 
         let detail = await getData(DETAIL_CAT_MOVIE_API_URL+tabmovies[i]);
         document.getElementById("detailCategory"+ind+i).src = detail.image_url;
         document.getElementById("detailCategory"+ind+i).title = detail.title;
         setmodalCatbestMovies(".bestMoviesCat"+ind+"Detail"+i,detail);
-    };    
+    };        
+};
+
+async function ReinitCatbestMovies(posdeb,ind){
+    for (let i = posdeb; i < MAX_MOVIES; i++) { 
+        document.getElementById("detailCategory"+ind+i).src = "image-blank.png";
+        document.getElementById("detailCategory"+ind+i).title = "";
+        let sectionDetail = document.querySelector(".bestMoviesCat"+ind+"Detail"+i);
+        // clean the window
+        if ( sectionDetail.childElementCount !== 0 ){
+            sectionDetail.innerText = ''; 
+        }
+        };    
 };
 
 async function renderBestMovie() {
@@ -186,7 +218,8 @@ async function renderCatMovies(urlin, icat) {
         setCatbestMovies(allCatMovies[icat][page[icat]],icat);
         //purge old movies
         if (allCatMovies[icat][page[icat]].length < MAX_MOVIES){
-            console.log("purge");
+            let pos = allCatMovies[icat][page[icat]].length;
+            ReinitCatbestMovies(pos,icat);
         }
         } 
     })
@@ -205,5 +238,5 @@ async function renderCatMovies(urlin, icat) {
 } 
 
 for (let icat = 0; icat < CAT_BEST_MOVIE_API_URL.length; icat++) { 
-    renderCatMovies(CAT_BEST_MOVIE_API_URL1[icat],icat); 
+    renderCatMovies(CAT_BEST_MOVIE_API_URL[icat][1],icat); 
     }
