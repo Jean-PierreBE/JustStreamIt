@@ -1,13 +1,9 @@
 const CAT_BEST_MOVIE_API_URL = [['Films les mieux notés','http://localhost:8000/api/v1/titles/?&sort_by=-imdb_score'],
                                 ['Animation','http://localhost:8000/api/v1/titles/?&genre=Animation&sort_by=-imdb_score'],
                                 ['Série noire','http://localhost:8000/api/v1/titles/?&genre=Film-noir&sort_by=-imdb_score'],
-                                ['Western','http://localhost:8000/api/v1/titles/?&genre=Western&sort_by=-imdb_score']];
-const CAT_BEST_MOVIE_API_URL1 = [['Films les mieux notés','http://localhost:8000/api/v1/titles/?&sort_by=-imdb_score'],
-                                ['Animation','http://localhost:8000/api/v1/titles/?&genre=Animation&sort_by=-imdb_score&country=France&country_contains=USA&imdb_score_min=7'],
-                                ['Série noire','http://localhost:8000/api/v1/titles/?&genre=Film-noir&sort_by=-imdb_score'],
-                                ['Adulte','http://localhost:8000/api/v1/titles/?&genre=Adult&sort_by=-imdb_score']];                                
+                                ['Western','http://localhost:8000/api/v1/titles/?&genre=Western&sort_by=-imdb_score']];                                                                 
 const DETAIL_CAT_MOVIE_API_URL = 'http://localhost:8000/api/v1/titles/';
-const INFO_NOT_AVAILABLE = 'Information non disponible';
+const INFO_NOT_AVAILABLE = 'Information not available';
 const MAX_MOVIES = 7;
 let page = [0,0,0,0];
 let page_max = [0,0,0,0];
@@ -82,13 +78,19 @@ function setmodalCatbestMovies(detailsection,data){
     imageMovie.src = data.image_url;
     genreMovie.innerText = "genre : " + formatTab(data.genres); 
     dateMovie.innerText = "Date de sortie : " + data.date_published;
-    ratedMovie.innerText = "Rate : " + data.avg_vote; 
+    ratedMovie.innerText = "Rate : " + data.rated; 
     scoreMovie.innerText = "Score imdb : " + data.imdb_score;
     realisateur.innerText = "réalisateurs : " + formatTab(data.directors);
     actors.innerText = "acteurs : " + formatTab(data.actors);
     duree.innerText = "Durée : " + data.duration + " minutes";
     //pays
-    country.innerText = "pays : " + formatTab(data.countries);
+    if (data.countries == "Unknown"){
+        info = INFO_NOT_AVAILABLE;
+    }
+    else {
+        info = data.countries;
+    }
+    country.innerText = "pays : " + info;
     //box office
     if (data.worldwide_gross_income == null){
         info = INFO_NOT_AVAILABLE;
@@ -98,7 +100,7 @@ function setmodalCatbestMovies(detailsection,data){
     }
     resultat.innerText = "Résultats box office : " + info;
     // résumé
-    if (data.long_description == null){
+    if (data.long_description == "|" ){
         info = INFO_NOT_AVAILABLE;
     }
     else {
