@@ -1,7 +1,10 @@
-const CAT_BEST_MOVIE_API_URL = [['Films les mieux notés','http://localhost:8000/api/v1/titles/?&sort_by=-imdb_score'],
-                                ['Animation','http://localhost:8000/api/v1/titles/?&genre=Animation&sort_by=-imdb_score'],
-                                ['Série noire','http://localhost:8000/api/v1/titles/?&genre=Film-noir&sort_by=-imdb_score'],
-                                ['Western','http://localhost:8000/api/v1/titles/?&genre=Western&sort_by=-imdb_score']];                                                                 
+const CAT_BEST_MOVIE_API_URL =  { "Libelle" : ['Films les mieux notés','Animation','Série noire','Western'],
+                                    "Link" : ['http://localhost:8000/api/v1/titles/?&sort_by=-imdb_score',
+                                            'http://localhost:8000/api/v1/titles/?&genre=Animation&sort_by=-imdb_score',
+                                            'http://localhost:8000/api/v1/titles/?&genre=Film-noir&sort_by=-imdb_score',
+                                            'http://localhost:8000/api/v1/titles/?&genre=Western&sort_by=-imdb_score']
+
+                                };                                                         
 const DETAIL_CAT_MOVIE_API_URL = 'http://localhost:8000/api/v1/titles/';
 const INFO_NOT_AVAILABLE = 'Information not available';
 const MAX_MOVIES = 7;
@@ -127,7 +130,7 @@ function setmodalCatbestMovies(detailsection,data){
  
 async function setCatbestMovies(tabmovies,ind){
     // fill title
-    document.getElementById("titlecategory"+ind).innerText = CAT_BEST_MOVIE_API_URL[ind][0];
+    document.getElementById("titlecategory"+ind).innerText = CAT_BEST_MOVIE_API_URL.Libelle[ind];
     //fill modal windows
     for (let i = 0; i < tabmovies.length; i++) { 
         let detail = await getData(DETAIL_CAT_MOVIE_API_URL+tabmovies[i]);
@@ -239,6 +242,7 @@ async function renderCatMovies(urlin, icat) {
       })  
 } 
 
-for (let icat = 0; icat < CAT_BEST_MOVIE_API_URL.length; icat++) { 
-    renderCatMovies(CAT_BEST_MOVIE_API_URL[icat][1],icat); 
+// lancement programme principal
+for (let icat = 0; icat < CAT_BEST_MOVIE_API_URL.Link.length; icat++) { 
+    renderCatMovies(CAT_BEST_MOVIE_API_URL.Link[icat],icat); 
     }
